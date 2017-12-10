@@ -163,76 +163,61 @@ void setup()
 
 void loop()
 {
+lc2.setRow(0,0,60);
+lc2.setRow(0,1,126);
+lc2.setRow(0,2,102);
+lc2.setRow(0,3,102);
+lc2.setRow(0,4,102);
+lc2.setRow(0,5,126);
+lc2.setRow(0,6,60);
 
-
-
-  lc2.setRow(0, 0, 60);
-  lc2.setRow(0, 1, 126);
-  lc2.setRow(0, 2, 102);
-  lc2.setRow(0, 3, 102);
-  lc2.setRow(0, 4, 102);
-  lc2.setRow(0, 5, 126);
-  lc2.setRow(0, 6, 60);
-
-  lc1.setRow(0, 0, 60);
-  lc1.setRow(0, 1, 126);
-  lc1.setRow(0, 2, 102);
-  lc1.setRow(0, 3, 102);
-  lc1.setRow(0, 4, 102);
-  lc1.setRow(0, 5, 126);
-  lc1.setRow(0, 6, 60);
+lc1.setRow(0,0,60);
+lc1.setRow(0,1,126);
+lc1.setRow(0,2,102);
+lc1.setRow(0,3,102);
+lc1.setRow(0,4,102);
+lc1.setRow(0,5,126);
+lc1.setRow(0,6,60);
 
   uint8_t nextState = state;
   switch (state) {
     case IDLE_STATE:   //stops both motors
 
-
-
-
+     Serial.println("STATE: IDLE");
+    
       digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
       analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;
       nextState = READ_LINE;
       break;
-   
-    
     case READ_LINE:
-      PWM_Mode();
-      delay(100);
-      //if (sensorValue < 7)
-     // {
-//        nextState = GRAB_BATTERY;
-   //   }
-     //else
-    // {
-
-        if ( mySensorBar.getDensity() < 7 )
+        Serial.println("STATE: read line");
+      if ( mySensorBar.getDensity() < 7 )
+      {
+        nextState = GO_FORWARD;
+        if ( mySensorBar.getPosition() < -50 )
         {
-          nextState = GO_FORWARD;
-          if ( mySensorBar.getPosition() < -50 )
-          {
-            nextState = GO_LEFT;
-          }
-          if ( mySensorBar.getPosition() > 50 )
-          {
-            nextState = GO_RIGHT;
-          }
+          nextState = GO_LEFT;
         }
-        else
+        if ( mySensorBar.getPosition() > 50 )
         {
-          nextState = IDLE_STATE;
+          nextState = GO_RIGHT;
         }
-    //  }
+      }
+      else
+      {
+        nextState = IDLE_STATE;
+      }
       break;
     case GO_FORWARD:
 
 
 
-
+ 
       neckservo.write(90);              // tell servo to go to position in variable 'pos'
 
-
+      Serial.println("case: go forward");
       digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
@@ -241,10 +226,10 @@ void loop()
       break;
     case GO_LEFT:
 
+  
+    neckservo.write(150);              // tell servo to go to position in variable 'pos'
 
-      neckservo.write(150);              // tell servo to go to position in variable 'pos'
-
-
+     Serial.println("case: go left");
       digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
@@ -253,9 +238,9 @@ void loop()
       break;
     case GO_RIGHT:
 
-
-      neckservo.write(30);              // tell servo to go to position in variable 'pos'
-
+    
+    neckservo.write(30);              // tell servo to go to position in variable 'pos'
+    Serial.println("cdase: go right");
       digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
@@ -263,22 +248,13 @@ void loop()
 
       nextState = READ_LINE;
       break;
-    
-    
     default:
       digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
       analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;
-
+      
       break;
-
-    case GRAB_BATTERY:
-      GrabBattery();
-      nextState = READ_LINE;
-      break;
-
-
   }
   state = nextState;
 
@@ -293,54 +269,54 @@ void GrabBattery()
 {
 
 
-gripservo.write(0);              // tell servo to go to position in variable 'pos'
-      rotategripservo.write(90);              // tell servo to go to position in variable 'pos'
- 
-      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-      analogWrite(pwm_2, 100);        //increase the speed of the motor from 0 to 255
-      analogWrite(pwm_1, 100);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+  gripservo.write(0);              // tell servo to go to position in variable 'pos'
+  rotategripservo.write(90);              // tell servo to go to position in variable 'pos'
 
-      delay(800);
+  digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+  digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+  analogWrite(pwm_2, 100);        //increase the speed of the motor from 0 to 255
+  analogWrite(pwm_1, 100);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
 
-       gripservo.write(180);
-       
-      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
-      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+  delay(800);
 
-     
-      delay (1000);
+  gripservo.write(180);
 
-     digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
-      digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
-      analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
-      analogWrite(pwm_1, 150);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
-      
-      delay(1000);
-
-      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
-      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
-
-      delay(2000);
-
-      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-      digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
-      analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
-      analogWrite(pwm_1, 150);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
-
-      delay(1850);
+  digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+  digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+  analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+  analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
 
 
-    digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
-      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+  delay (1000);
 
-delay(10000);
+  digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
+  digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
+  analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
+  analogWrite(pwm_1, 150);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+  delay(1000);
+
+  digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+  digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+  analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+  analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+  delay(2000);
+
+  digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+  digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
+  analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
+  analogWrite(pwm_1, 150);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+  delay(1850);
+
+
+  digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+  digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+  analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+  analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+  delay(10000);
 
 }
 
