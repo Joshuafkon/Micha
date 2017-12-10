@@ -195,16 +195,17 @@ void loop()
       analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;
       nextState = READ_LINE;
       break;
+   
+    
     case READ_LINE:
-
       PWM_Mode();
       delay(100);
-      if (sensorValue < 6)
-      {
-        nextState = GRAB_BATTERY;
-      }
-      else
-      {
+      //if (sensorValue < 7)
+     // {
+//        nextState = GRAB_BATTERY;
+   //   }
+     //else
+    // {
 
         if ( mySensorBar.getDensity() < 7 )
         {
@@ -222,114 +223,159 @@ void loop()
         {
           nextState = IDLE_STATE;
         }
-      }
-        break;
-      case GO_FORWARD:
+    //  }
+      break;
+    case GO_FORWARD:
 
 
 
 
-        neckservo.write(90);              // tell servo to go to position in variable 'pos'
+      neckservo.write(90);              // tell servo to go to position in variable 'pos'
 
 
-        digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-        digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-        analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
-        analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
-        nextState = READ_LINE;
-        break;
-      case GO_LEFT:
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+      nextState = READ_LINE;
+      break;
+    case GO_LEFT:
 
 
-        neckservo.write(150);              // tell servo to go to position in variable 'pos'
+      neckservo.write(150);              // tell servo to go to position in variable 'pos'
 
 
-        digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-        digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
-        analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
-        analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
-        nextState = READ_LINE;
-        break;
-      case GO_RIGHT:
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+      nextState = READ_LINE;
+      break;
+    case GO_RIGHT:
 
 
-        neckservo.write(30);              // tell servo to go to position in variable 'pos'
+      neckservo.write(30);              // tell servo to go to position in variable 'pos'
 
-        digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
-        digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-        analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
-        analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+      digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
 
-        nextState = READ_LINE;
-        break;
-      default:
-        digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-        digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
-        analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
-        analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;
+      nextState = READ_LINE;
+      break;
+    
+    
+    default:
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;
 
-        break;
+      break;
 
- case GRAB_BATTERY:
-
-
-
-        digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
-        digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
-        analogWrite(pwm_2, 125);        //increase the speed of the motor from 0 to 255
-        analogWrite(pwm_1, 125);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
-
-         gripservo.write(150);              // tell servo to go to position in variable 'pos'
-         delay (3000);
-         gripservo.write(0);
-         delay (3000);
-
-        
-        nextState = READ_LINE;
-        break;
-
-        
-      }
-      state = nextState;
-
-
-
+    case GRAB_BATTERY:
+      GrabBattery();
+      nextState = READ_LINE;
+      break;
 
 
   }
+  state = nextState;
 
-  void PWM_Mode()                              // a low pull on pin COMP/TRIG  triggering a sensor reading
+
+
+
+
+}
+
+
+void GrabBattery()
+{
+
+
+gripservo.write(0);              // tell servo to go to position in variable 'pos'
+      rotategripservo.write(90);              // tell servo to go to position in variable 'pos'
+ 
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 100);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 100);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+      delay(800);
+
+       gripservo.write(180);
+       
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+     
+      delay (1000);
+
+     digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 150);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+      
+      delay(1000);
+
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+      delay(2000);
+
+      digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 150);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+      delay(1850);
+
+
+    digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
+      digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
+      analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
+      analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
+
+delay(10000);
+
+}
+
+void PWM_Mode()                              // a low pull on pin COMP/TRIG  triggering a sensor reading
+{
+  Serial.print("Distance Measured=");
+  digitalWrite(URTRIG, LOW);
+  digitalWrite(URTRIG, HIGH);               // reading Pin PWM will output pulses
+  if ( Measure)
   {
-    Serial.print("Distance Measured=");
-    digitalWrite(URTRIG, LOW);
-    digitalWrite(URTRIG, HIGH);               // reading Pin PWM will output pulses
-    if ( Measure)
+    unsigned long LowLevelTime = pulseIn(URECHO, LOW) ;
+    if (LowLevelTime >= 45000)              // the reading is invalid.
     {
-      unsigned long LowLevelTime = pulseIn(URECHO, LOW) ;
-      if (LowLevelTime >= 45000)              // the reading is invalid.
-      {
-        Serial.print("Invalid");
-      }
-      else {
-        DistanceMeasured = LowLevelTime / 50;  // every 50us low level stands for 1cm
-        Serial.print(DistanceMeasured);
-        Serial.println("cm");
-      }
-
+      Serial.print("Invalid");
     }
     else {
-      sensorValue = analogRead(sensorPin);
-      if (sensorValue <= 10)                // the reading is invalid.
-      {
-        Serial.print("Invalid");
-      }
-      else {
-        sensorValue = sensorValue * 0.718;
-        Serial.print(sensorValue);
-        Serial.println("cm");
-      }
+      DistanceMeasured = LowLevelTime / 50;  // every 50us low level stands for 1cm
+      Serial.print(DistanceMeasured);
+      Serial.println("cm");
+    }
+
+  }
+  else {
+    sensorValue = analogRead(sensorPin);
+    if (sensorValue <= 10)                // the reading is invalid.
+    {
+      Serial.print("Invalid");
+    }
+    else {
+      sensorValue = sensorValue * 0.718;
+      Serial.print(sensorValue);
+      Serial.println("cm");
     }
   }
+}
 
 
 
