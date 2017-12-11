@@ -25,7 +25,7 @@
 
 ******************************************************************************/
 #define  Measure  1     //Mode select
-int URECHO = 3;         // PWM Output 0-25000US,Every 50US represent 1cm
+int URECHO = 19;         // PWM Output 0-25000US,Every 50US represent 1cm
 int URTRIG = 5;         // PWM trigger pin
 int sensorPin = A0;     // select the input pin for the potentiometer
 int sensorValue = 0;    // variable to store the value coming from the sensor
@@ -158,7 +158,7 @@ void setup()
   Serial.println("Init the sensor");
 
 
-attachInterrupt(digitalPinToInterrupt(19), pwmmode, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(19), pwmmode, CHANGE);
 
 
 
@@ -166,28 +166,28 @@ attachInterrupt(digitalPinToInterrupt(19), pwmmode, CHANGE);
 
 void loop()
 {
-lc2.setRow(0,0,60);
-lc2.setRow(0,1,126);
-lc2.setRow(0,2,102);
-lc2.setRow(0,3,102);
-lc2.setRow(0,4,102);
-lc2.setRow(0,5,126);
-lc2.setRow(0,6,60);
+  lc2.setRow(0, 0, 60);
+  lc2.setRow(0, 1, 126);
+  lc2.setRow(0, 2, 102);
+  lc2.setRow(0, 3, 102);
+  lc2.setRow(0, 4, 102);
+  lc2.setRow(0, 5, 126);
+  lc2.setRow(0, 6, 60);
 
-lc1.setRow(0,0,60);
-lc1.setRow(0,1,126);
-lc1.setRow(0,2,102);
-lc1.setRow(0,3,102);
-lc1.setRow(0,4,102);
-lc1.setRow(0,5,126);
-lc1.setRow(0,6,60);
+  lc1.setRow(0, 0, 60);
+  lc1.setRow(0, 1, 126);
+  lc1.setRow(0, 2, 102);
+  lc1.setRow(0, 3, 102);
+  lc1.setRow(0, 4, 102);
+  lc1.setRow(0, 5, 126);
+  lc1.setRow(0, 6, 60);
 
   uint8_t nextState = state;
   switch (state) {
     case IDLE_STATE:   //stops both motors
 
-     Serial.println("STATE: IDLE");
-    
+      Serial.println("STATE: IDLE");
+
       digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
@@ -195,7 +195,7 @@ lc1.setRow(0,6,60);
       nextState = READ_LINE;
       break;
     case READ_LINE:
-        Serial.println("STATE: read line");
+      Serial.println("STATE: read line");
       if ( mySensorBar.getDensity() < 7 )
       {
         nextState = GO_FORWARD;
@@ -217,7 +217,7 @@ lc1.setRow(0,6,60);
 
 
 
- 
+
       neckservo.write(90);              // tell servo to go to position in variable 'pos'
 
       Serial.println("case: go forward");
@@ -229,10 +229,10 @@ lc1.setRow(0,6,60);
       break;
     case GO_LEFT:
 
-  
-    neckservo.write(150);              // tell servo to go to position in variable 'pos'
 
-     Serial.println("case: go left");
+      neckservo.write(150);              // tell servo to go to position in variable 'pos'
+
+      Serial.println("case: go left");
       digitalWrite(dir_1, LOW);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, HIGH);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
@@ -241,9 +241,9 @@ lc1.setRow(0,6,60);
       break;
     case GO_RIGHT:
 
-    
-    neckservo.write(30);              // tell servo to go to position in variable 'pos'
-    Serial.println("cdase: go right");
+
+      neckservo.write(30);              // tell servo to go to position in variable 'pos'
+      Serial.println("cdase: go right");
       digitalWrite(dir_1, HIGH);    //controls the direction the motor HIGH = Forward
       digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 150);        //increase the speed of the motor from 0 to 255
@@ -256,7 +256,7 @@ lc1.setRow(0,6,60);
       digitalWrite(dir_2, LOW);    //controls the direction the motor HIGH = Forward
       analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
       analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;
-      
+
       break;
   }
   state = nextState;
@@ -319,7 +319,8 @@ void GrabBattery()
   analogWrite(pwm_2, 0);        //increase the speed of the motor from 0 to 255
   analogWrite(pwm_1, 0);        //decrease the speed of the motor from 255 to 0;    POWER SENT TO RIGHT TRACK MUST BE ~75% POWER BECASUE OF HIGH FRICTION ON LEFT SIDE.
 
-  delay(10000);
+state = READ_LINE;
+
 
 }
 
@@ -339,6 +340,11 @@ void pwmmode()                              // a low pull on pin COMP/TRIG  trig
       DistanceMeasured = LowLevelTime / 50;  // every 50us low level stands for 1cm
       Serial.print(DistanceMeasured);
       Serial.println("cm");
+
+      if (DistanceMeasured <= 10)
+      {
+        GrabBattery();
+      }
     }
 
   }
@@ -352,8 +358,10 @@ void pwmmode()                              // a low pull on pin COMP/TRIG  trig
       sensorValue = sensorValue * 0.718;
       Serial.print(sensorValue);
       Serial.println("cm");
+
+
     }
-  } 
+  }
 }
 
 
