@@ -158,6 +158,9 @@ void setup()
   Serial.println("Init the sensor");
 
 
+attachInterrupt(digitalPinToInterrupt(19), pwmmode, CHANGE);
+
+
 
 }
 
@@ -264,7 +267,7 @@ lc1.setRow(0,6,60);
 
 }
 
-/*
+
 void GrabBattery()
 {
 
@@ -320,7 +323,7 @@ void GrabBattery()
 
 }
 
-void PWM_Mode()                              // a low pull on pin COMP/TRIG  triggering a sensor reading
+void pwmmode()                              // a low pull on pin COMP/TRIG  triggering a sensor reading
 {
   Serial.print("Distance Measured=");
   digitalWrite(URTRIG, LOW);
@@ -351,7 +354,7 @@ void PWM_Mode()                              // a low pull on pin COMP/TRIG  tri
       Serial.println("cm");
     }
   } 
-}*/
+}
 
 
 
